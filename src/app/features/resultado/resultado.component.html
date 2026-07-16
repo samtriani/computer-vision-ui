@@ -1,0 +1,96 @@
+<section class="page">
+  <div class="result-head">
+    <div>
+      <p class="eyebrow">Bloque 1 + Bloque 2 · Qué hacer</p>
+      <h1>Análisis del anaquel</h1>
+      <div class="result-meta">
+        <span class="chip">La Comer Insurgentes</span>
+        <span class="chip">P-04 Lácteos · Módulo 4-B</span>
+        <span class="chip">Hoy · 7:02 am</span>
+        <span class="chip">Confianza del modelo: 93%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-result">
+    <div class="card shelf-card">
+      <div class="shelf-title">
+        <h3>Anaquel digitalizado vs planograma</h3>
+        <div class="legend">
+          <span><i style="background:var(--verde)"></i>En posición</span>
+          <span><i style="background:var(--rojo)"></i>Hueco detectado</span>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 640 420" width="100%" role="img" aria-label="Anaquel con productos y huecos detectados">
+        <rect x="0" y="0" width="640" height="420" rx="10" fill="#F6F1E9"/>
+        <rect x="14" y="118" width="612" height="10" rx="3" fill="#C9BFB3"/>
+        <rect x="14" y="256" width="612" height="10" rx="3" fill="#C9BFB3"/>
+        <rect x="14" y="394" width="612" height="10" rx="3" fill="#C9BFB3"/>
+        <g font-family="Archivo" font-size="12" font-weight="600">
+          <g><rect x="24" y="34" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="68" y="72" text-anchor="middle" fill="#fff">Alpura</text><text x="68" y="88" text-anchor="middle" fill="#fff" font-size="10.5">Entera 1L</text></g>
+          <g><rect x="120" y="34" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="164" y="72" text-anchor="middle" fill="#fff">Alpura</text><text x="164" y="88" text-anchor="middle" fill="#fff" font-size="10.5">Entera 1L</text></g>
+          <g class="hueco-box" (click)="verHueco('H-01')">
+            <rect class="hb" x="216" y="34" width="88" height="84" rx="6"/>
+            <rect x="226" y="42" width="68" height="18" rx="4" fill="#D8432B"/>
+            <text class="hueco-tag" x="260" y="55" text-anchor="middle">HUECO H-01</text>
+            <text x="260" y="86" text-anchor="middle" fill="#B03620" font-size="10.5">Alpura Light 1L</text>
+          </g>
+          <g><rect x="312" y="34" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="356" y="72" text-anchor="middle" fill="#fff">Lala</text><text x="356" y="88" text-anchor="middle" fill="#fff" font-size="10.5">Entera 1L</text></g>
+          <g><rect x="408" y="34" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="452" y="72" text-anchor="middle" fill="#fff">Lala</text><text x="452" y="88" text-anchor="middle" fill="#fff" font-size="10.5">Deslact. 1L</text></g>
+          <g><rect x="504" y="34" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="548" y="72" text-anchor="middle" fill="#fff">Santa Clara</text><text x="548" y="88" text-anchor="middle" fill="#fff" font-size="10.5">Entera 1L</text></g>
+
+          <g><rect x="24" y="172" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="68" y="210" text-anchor="middle" fill="#fff">Yoplait</text><text x="68" y="226" text-anchor="middle" fill="#fff" font-size="10.5">Natural 1kg</text></g>
+          <g class="hueco-box" (click)="verHueco('H-02')">
+            <rect class="hb" x="120" y="172" width="88" height="84" rx="6"/>
+            <rect x="130" y="180" width="68" height="18" rx="4" fill="#D8432B"/>
+            <text class="hueco-tag" x="164" y="193" text-anchor="middle">HUECO H-02</text>
+            <text x="164" y="224" text-anchor="middle" fill="#B03620" font-size="10.5">Alpura Griego</text>
+          </g>
+          <g><rect x="216" y="172" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="260" y="210" text-anchor="middle" fill="#fff">Danone</text><text x="260" y="226" text-anchor="middle" fill="#fff" font-size="10.5">Bebible 6pz</text></g>
+          <g><rect x="312" y="172" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="356" y="210" text-anchor="middle" fill="#fff">Chobani</text><text x="356" y="226" text-anchor="middle" fill="#fff" font-size="10.5">Griego 150g</text></g>
+          <g><rect x="408" y="172" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="452" y="210" text-anchor="middle" fill="#fff">Yoplait</text><text x="452" y="226" text-anchor="middle" fill="#fff" font-size="10.5">Fresa 4pz</text></g>
+          <g><rect x="504" y="172" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="548" y="210" text-anchor="middle" fill="#fff">Lala</text><text x="548" y="226" text-anchor="middle" fill="#fff" font-size="10.5">Yomi 6pz</text></g>
+
+          <g><rect x="24" y="310" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="68" y="348" text-anchor="middle" fill="#fff">Lala</text><text x="68" y="364" text-anchor="middle" fill="#fff" font-size="10.5">Crema 450ml</text></g>
+          <g><rect x="120" y="310" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="164" y="348" text-anchor="middle" fill="#fff">Alpura</text><text x="164" y="364" text-anchor="middle" fill="#fff" font-size="10.5">Crema 450ml</text></g>
+          <g><rect x="216" y="310" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="260" y="348" text-anchor="middle" fill="#fff">Gloria</text><text x="260" y="364" text-anchor="middle" fill="#fff" font-size="10.5">Mantq. 90g</text></g>
+          <g class="hueco-box" (click)="verHueco('H-03')">
+            <rect class="hb" x="312" y="310" width="88" height="84" rx="6"/>
+            <rect x="322" y="318" width="68" height="18" rx="4" fill="#D8432B"/>
+            <text class="hueco-tag" x="356" y="331" text-anchor="middle">HUECO H-03</text>
+            <text x="356" y="362" text-anchor="middle" fill="#B03620" font-size="10.5">Philadelphia 190g</text>
+          </g>
+          <g><rect x="408" y="310" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="452" y="348" text-anchor="middle" fill="#fff">Fud</text><text x="452" y="364" text-anchor="middle" fill="#fff" font-size="10.5">Queso 400g</text></g>
+          <g><rect x="504" y="310" width="88" height="84" rx="6" fill="#7FB539" opacity=".85"/><text x="548" y="348" text-anchor="middle" fill="#fff">Lyncott</text><text x="548" y="364" text-anchor="middle" fill="#fff" font-size="10.5">Crema 200ml</text></g>
+        </g>
+      </svg>
+    </div>
+
+    <div>
+      <div class="kpi-mini">
+        <div class="card kpi-box"><div class="num">18</div><div class="lbl">Posiciones</div></div>
+        <div class="card kpi-box"><div class="num bad">{{ huecos.length }}</div><div class="lbl">Huecos</div></div>
+        <div class="card kpi-box"><div class="num warn">83.3%</div><div class="lbl">OSA módulo</div></div>
+      </div>
+
+      <div class="card tabla-huecos">
+        <div class="card-pad">
+          <h3>Huecos y causa clasificada</h3>
+          <p class="hint">Cruce visión + inventario en sistema</p>
+
+          <div class="hueco-item" *ngFor="let h of huecos" [id]="'hueco-' + h.id"
+               [class.resaltado]="huecoSeleccionado === h.id">
+            <div class="top">
+              <div><b>{{ h.id }} · {{ h.producto }}</b><div class="pos">SKU {{ h.sku }} · {{ h.posicion }}</div></div>
+              <span class="causa" [ngClass]="causaClase[h.causa]">{{ causaLabel[h.causa] }}</span>
+            </div>
+            <p class="detalle">{{ h.detalle }}</p>
+          </div>
+
+          <button class="btn btn-accion" (click)="generarTareas()">Generar {{ huecos.length }} tareas de acción</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+.topbar{background:var(--blanco);border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:50}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:38px;height:38px;border-radius:50%;background:var(--naranja);display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px;letter-spacing:-.5px;flex-shrink:0}
+.brand-name{font-weight:800;font-size:17px;letter-spacing:-.3px;white-space:nowrap}
+.brand-name small{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--naranja)}
+
+.nav{display:flex;gap:4px}
+.nav a{text-decoration:none;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14.5px;color:var(--tinta-2);transition:.15s}
+.nav a:hover{background:var(--crema);color:var(--tinta)}
+.nav a.active{background:var(--naranja-suave);color:var(--naranja-hover)}
+
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+
+.rol-switch{display:flex;background:var(--crema);border:1px solid var(--borde);border-radius:999px;padding:3px;gap:2px}
+.rol-switch button{border:none;background:none;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--tinta-2);display:flex;align-items:center;gap:6px;transition:.15s}
+.rol-switch button:hover{color:var(--tinta)}
+.rol-switch button.active{background:var(--naranja);color:#fff}
+.rol-switch .ico{font-size:13px}
+
+.badge-poc{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1.5px;font-size:12px;text-transform:uppercase;background:var(--tinta);color:#fff;padding:5px 12px;border-radius:999px;flex-shrink:0}
+
+@media (max-width: 760px){
+  .topbar-inner{height:auto;padding:12px 16px;gap:12px}
+  .nav{order:3;width:100%}
+  .topbar-right{margin-left:0;width:100%;justify-content:space-between}
+}

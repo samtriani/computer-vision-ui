@@ -1,0 +1,78 @@
+<section class="page">
+  <p class="eyebrow">Bloque 1 · Lo que ves</p>
+  <h1>Captura de anaquel</h1>
+  <p class="sub">Sube una foto del anaquel o selecciona una imagen de muestra. El modelo de visión detecta huecos y los cruza contra el planograma de la tienda.</p>
+
+  <div class="grid-captura">
+    <div class="card card-pad">
+      <h3>Imagen del anaquel</h3>
+      <p class="hint">JPG o PNG · máx 20 MB · se redimensiona a 1280px antes de enviar</p>
+
+      <div class="dropzone" role="button" tabindex="0" aria-label="Zona para subir imagen">
+        <div class="dz-icon">📷</div>
+        <p>Arrastra la foto aquí o haz clic para elegir</p>
+        <small>También puedes capturar directo desde tablet en piso de venta</small>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="selPasillo">Pasillo / Categoría</label>
+          <select id="selPasillo">
+            <option>P-04 · Lácteos</option>
+            <option>P-07 · Abarrotes secos</option>
+            <option>P-11 · Cuidado personal</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="selCharola">Sección de anaquel</label>
+          <select id="selCharola">
+            <option>Módulo 4-B · Leches</option>
+            <option>Módulo 4-C · Yogurts</option>
+          </select>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px">O usa una muestra</h3>
+      <div class="samples">
+        <button *ngFor="let m of muestras"
+                class="sample" [class.selected]="muestraSeleccionada === m.id"
+                (click)="elegirMuestra(m.id)">
+          <svg viewBox="0 0 120 68">
+            <rect width="120" height="68" fill="#F3EDE5"/>
+            <rect x="6" y="10" width="108" height="4" fill="#C9BFB3"/>
+            <rect x="6" y="32" width="108" height="4" fill="#C9BFB3"/>
+            <rect x="6" y="54" width="108" height="4" fill="#C9BFB3"/>
+            <rect x="10" y="16" width="14" height="14" rx="2" [attr.fill]="m.id === 0 ? '#7FB539' : (m.id === 1 ? '#F16521' : '#7FB539')"/>
+            <rect x="27" y="16" width="14" height="14" rx="2" fill="#7FB539"/>
+            <rect x="44" y="16" width="14" height="14" rx="2" [attr.fill]="m.id === 2 ? '#7FB539' : '#F16521'"/>
+            <rect x="61" y="38" width="14" height="14" rx="2" fill="#E9A13B"/>
+            <rect x="78" y="16" width="14" height="14" rx="2" fill="#7FB539"/>
+          </svg>
+          <span>{{ m.etiqueta }}</span>
+        </button>
+      </div>
+
+      <button class="btn btn-primary btn-block" [disabled]="analizando" (click)="analizar()">
+        Analizar anaquel
+      </button>
+
+      <div class="analizando" [class.on]="analizando">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Analizando imagen con modelo de visión…</p>
+        <small>Detección de huecos → identificación de SKU esperado → cruce con inventario</small>
+      </div>
+    </div>
+
+    <div class="card card-pad">
+      <h3>¿Qué pasa al analizar?</h3>
+      <p class="hint">Pipeline de la PoC en dos bloques</p>
+      <ol class="pipeline">
+        <li><span class="step-num">1</span><div><b>Detección visual de huecos</b><small>El VLM localiza espacios vacíos en las charolas de la imagen.</small></div></li>
+        <li><span class="step-num">2</span><div><b>Cruce con planograma</b><small>Cada hueco se asocia al SKU que debería ocupar esa posición.</small></div></li>
+        <li><span class="step-num">3</span><div><b>Consulta de inventario</b><small>Se verifica existencia en bodega de tienda y en sistema.</small></div></li>
+        <li><span class="step-num">4</span><div><b>Clasificación de causa</b><small>Las 10 causas del reporte F9: en bodega, error operativo, proveedor, tránsito, etc.</small></div></li>
+        <li><span class="step-num">5</span><div><b>Acción sugerida</b><small>Se genera tarea de reposición o alerta al área correspondiente.</small></div></li>
+      </ol>
+    </div>
+  </div>
+</section>

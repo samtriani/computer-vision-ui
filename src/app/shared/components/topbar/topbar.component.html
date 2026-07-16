@@ -1,0 +1,29 @@
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">OSA</div>
+      <div class="brand-name">OSA Vision<small>La Comer · Detección de faltantes</small></div>
+    </div>
+
+    <nav class="nav" aria-label="Secciones">
+      <a *ngIf="rolActivo === 'operativo' || rolActivo === 'tienda'"
+         routerLink="/captura" routerLinkActive="active">Captura</a>
+      <a *ngIf="rolActivo === 'tienda'"
+         routerLink="/resultado" routerLinkActive="active">Análisis</a>
+      <a *ngIf="rolActivo === 'tienda' || rolActivo === 'ejecutivo'"
+         routerLink="/dashboard" routerLinkActive="active">Dashboard OSA</a>
+    </nav>
+
+    <div class="topbar-right">
+      <div class="rol-switch" role="group" aria-label="Cambiar rol">
+        <button *ngFor="let r of rolService.roles"
+                [class.active]="rolActivo === r.id"
+                (click)="elegirRol(r.id)"
+                [title]="r.descripcion">
+          <span class="ico">{{ r.icono }}</span>{{ r.nombre }}
+        </button>
+      </div>
+      <span class="badge-poc">PoC</span>
+    </div>
+  </div>
+</header>

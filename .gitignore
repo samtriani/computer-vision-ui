@@ -1,0 +1,19 @@
+# Dependencies
+/node_modules
+
+# Angular build output
+/dist
+/.angular/cache
+/tmp
+/out-tsc
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+*.log
+
+# Environment
+.env

@@ -1,0 +1,87 @@
+<section class="page">
+  <p class="eyebrow">Vista ejecutiva</p>
+  <h1>Dashboard OSA</h1>
+  <p class="sub">Disponibilidad en anaquel medida de forma objetiva y continua. Datos de demostración · semana 28, 2026.</p>
+
+  <div class="kpis">
+    <div class="card kpi v"><div class="lbl">OSA global</div><div class="num">92.4%</div><div class="delta up">▲ 1.8 pts vs semana anterior</div></div>
+    <div class="card kpi r"><div class="lbl">Venta perdida estimada</div><div class="num">$483K</div><div class="delta down">semanal · MXN</div></div>
+    <div class="card kpi"><div class="lbl">Huecos activos</div><div class="num">137</div><div class="delta up">▼ 22 vs ayer</div></div>
+    <div class="card kpi a"><div class="lbl">Tiempo medio de reposición</div><div class="num">3.2 h</div><div class="delta down">objetivo: 1.5 h</div></div>
+  </div>
+
+  <div class="grid-dash">
+    <div class="card chart-card">
+      <h3>OSA por categoría</h3>
+      <p class="hint">Promedio de escaneos del día · La Comer Insurgentes</p>
+      <div class="bar-row" *ngFor="let c of data.categorias">
+        <span class="cat">{{ c.nombre }}</span>
+        <div class="bar-track"><div class="bar-fill" [ngClass]="claseBarra(c.osa)" [style.width.%]="c.osa"></div></div>
+        <span class="val">{{ c.osa.toFixed(1) }}%</span>
+      </div>
+
+      <h3 style="margin-top:28px">Tiendas monitoreadas</h3>
+      <p class="hint">OSA del día y huecos activos</p>
+      <table class="tabla">
+        <thead><tr><th>Tienda</th><th class="num-cell">OSA</th><th class="num-cell">Huecos</th><th class="num-cell">Venta perdida/día</th><th class="num-cell">Cumplimiento F9</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let t of data.tiendas">
+            <td><span class="semaforo" [ngClass]="semaforo(t.osa)"></span>{{ t.nombre }}</td>
+            <td class="num-cell">{{ t.osa.toFixed(1) }}%</td>
+            <td class="num-cell">{{ t.huecos }}</td>
+            <td class="num-cell">${{ t.ventaPerdidaDia | number }}</td>
+            <td class="num-cell" [ngClass]="cumplimientoClase(t.cumplimientoF9)">{{ t.cumplimientoF9 }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card chart-card">
+      <h3>OSA a lo largo del día</h3>
+      <p class="hint">El hallazgo clave: la medición puntual engaña</p>
+      <div class="horas">
+        <div class="hora-col" *ngFor="let p of data.serieHoraria">
+          <span class="v">{{ p.osa }}%</span>
+          <div class="hora-bar" [style.height.%]="(p.osa / maxOsa()) * 100"
+               [class.medio]="p.osa < 90 && p.osa >= 84" [class.bajo]="p.osa < 84"></div>
+          <small>{{ p.hora }}</small>
+        </div>
+      </div>
+      <div class="nota-insight">El F9 (AS-IS) escanea <b>una vez al día</b> por tienda: la auditoría de las 7 am reporta <b>96% de OSA</b>, pero a las 3 pm la disponibilidad real cae a <b>82%</b>. La medición continua por visión revela la brecha que el F9 no puede capturar.</div>
+
+      <h3 style="margin-top:28px">Causas de desabasto (F9)</h3>
+      <p class="hint">Las 10 causas del reporte AS-IS · coloreadas por responsable</p>
+      <div class="bar-row causa-row" *ngFor="let c of data.causasSemana">
+        <span class="cat" [title]="causaLabel[c.causa]">{{ causaLabel[c.causa] }}</span>
+        <div class="bar-track"><div class="bar-fill" [style.width.%]="c.pct" [style.background]="responsableColor[causaResponsable[c.causa]]"></div></div>
+        <span class="val">{{ c.pct }}%</span>
+      </div>
+      <div class="legend-responsable">
+        <span *ngFor="let r of responsables"><i [style.background]="responsableColor[r]"></i>{{ responsableLabel[r] }}</span>
+      </div>
+    </div>
+
+    <div class="card chart-card full-width">
+      <h3>F9 · Formato / Subdirector</h3>
+      <p class="hint">Pivot AS-IS: por qué "Sin rol" domina distinto según formato</p>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Formato</th><th>Subdirector</th><th class="num-cell">Tiendas</th>
+            <th class="num-cell">% Sin rol</th><th class="num-cell">Cumplimiento prom.</th><th class="num-cell">Artículos escaneados/día</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of data.formatoSubdirector">
+            <td>{{ f.formato }}</td>
+            <td>{{ f.subdirector }}</td>
+            <td class="num-cell">{{ f.tiendas }}</td>
+            <td class="num-cell">{{ f.sinRolPct }}%</td>
+            <td class="num-cell">{{ f.cumplimientoProm }}%</td>
+            <td class="num-cell">{{ f.articulosEscaneadosProm }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
