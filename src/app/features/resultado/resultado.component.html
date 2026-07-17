@@ -83,9 +83,30 @@
                [class.resaltado]="huecoSeleccionado === h.id">
             <div class="top">
               <div><b>{{ h.id }} · {{ h.producto }}</b><div class="pos">SKU {{ h.sku }} · {{ h.posicion }}</div></div>
-              <span class="causa" [ngClass]="causaClase[h.causa]">{{ causaLabel[h.causa] }}</span>
+              <div class="causa-wrap">
+                <button type="button" class="causa" [ngClass]="causaClase[h.causa]" (click)="toggleCatalogo(h.id)">
+                  {{ causaLabel[h.causa] }}
+                  <span class="causa-icon">{{ editandoCausa === h.id ? '✕' : '✎' }}</span>
+                </button>
+                <button type="button" class="btn-confirmar" *ngIf="!h.causaConfirmada"
+                        (click)="confirmarSugerida(h, $event)" title="Confirmar causa sugerida">✓ Confirmar</button>
+              </div>
             </div>
+            <p class="causa-estado" [class.ok]="h.causaConfirmada">
+              {{ h.causaConfirmada ? '✓ Causa confirmada por el operador' : 'Sugerida por el sistema (cruce bodega/sistema) · pendiente de confirmar' }}
+            </p>
             <p class="detalle">{{ h.detalle }}</p>
+
+            <div class="catalogo-causas" *ngIf="editandoCausa === h.id">
+              <p class="hint">Elige la causa correcta (catálogo F9):</p>
+              <div class="chips-causas">
+                <button type="button" *ngFor="let c of catalogoCausas" class="chip-causa"
+                        [ngClass]="causaClase[c]" [class.activa]="c === h.causa"
+                        (click)="elegirCausa(h, c)">
+                  {{ causaLabel[c] }}
+                </button>
+              </div>
+            </div>
           </div>
 
           <button class="btn btn-accion" (click)="generarTareas()">Generar {{ huecos.length }} tareas de acción</button>
