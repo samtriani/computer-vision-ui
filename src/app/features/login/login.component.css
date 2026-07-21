@@ -1,0 +1,21 @@
+.login-page{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:32px 20px;background:var(--crema)}
+
+.login-card{width:100%;max-width:380px;padding:32px;text-align:center}
+.login-card .brand-mark{width:48px;height:48px;border-radius:50%;background:var(--naranja);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;letter-spacing:-.5px;margin:0 auto 16px}
+.login-card .eyebrow{margin-bottom:2px}
+.login-card h1{font-size:24px;font-weight:900;letter-spacing:-.5px;margin:0}
+.login-card .sub{color:var(--tinta-2);font-size:14px;margin:8px 0 24px}
+
+.field{text-align:left;margin-bottom:16px}
+.field label{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1.4px;font-size:11.5px;text-transform:uppercase;color:var(--tinta-2);margin-bottom:6px}
+.field input{width:100%;border:1px solid var(--borde);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:14.5px;font-weight:600;background:var(--blanco);color:var(--tinta)}
+.field input:focus{outline:2px solid var(--naranja);outline-offset:1px}
+
+.error{color:var(--rojo);background:var(--rojo-suave);border-radius:10px;padding:10px 12px;font-size:13.5px;font-weight:600;margin:0 0 16px;text-align:left}
+
+.btn-block{width:100%}
+
+.demo-hint{margin-top:24px;padding-top:20px;border-top:1px dashed var(--borde);display:flex;flex-direction:column;gap:6px}
+.demo-hint .hint{font-size:12.5px;color:var(--tinta-3);margin:0 0 4px}
+.demo-chip{border:1px solid var(--borde);background:var(--blanco);border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--tinta-2);text-align:left;transition:.15s}
+.demo-chip:hover{border-color:var(--naranja);color:var(--naranja-hover);background:var(--naranja-suave)}

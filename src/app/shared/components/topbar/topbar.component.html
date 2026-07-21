@@ -24,6 +24,10 @@
         </button>
       </div>
       <span class="badge-poc">PoC</span>
+      <div class="user-box" *ngIf="authService.currentUser() as usuario">
+        <span class="user-name">{{ usuario.nombre }}</span>
+        <button class="btn-logout" (click)="cerrarSesion()" title="Cerrar sesión">Salir</button>
+      </div>
     </div>
   </div>
 </header>
