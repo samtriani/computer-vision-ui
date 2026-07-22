@@ -30,6 +30,7 @@ export interface Hueco {
   producto: string;
   posicion: string;
   causa: CausaHueco;
+  causaConfirmada: boolean;
   detalle: string;
   bodega: number;
   sistema: number;

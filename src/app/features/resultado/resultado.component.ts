@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OsaDataService } from '../../core/services/osa-data.service';
-import { CAUSA_CLASE, CAUSA_LABEL } from '../../core/models/osa.models';
+import { CAUSA_CLASE, CAUSA_LABEL, CausaHueco, Hueco } from '../../core/models/osa.models';
 
 @Component({
   selector: 'app-resultado',
@@ -14,18 +14,34 @@ export class ResultadoComponent {
   data = inject(OsaDataService);
   causaLabel = CAUSA_LABEL;
   causaClase = CAUSA_CLASE;
+  catalogoCausas = Object.keys(CAUSA_LABEL) as CausaHueco[];
 
   get huecos() {
     return this.data.huecos();
   }
 
   huecoSeleccionado: string | null = null;
+  editandoCausa: string | null = null;
 
   verHueco(id: string) {
     this.huecoSeleccionado = id;
     setTimeout(() => (this.huecoSeleccionado = null), 1600);
     const el = document.getElementById('hueco-' + id);
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  toggleCatalogo(id: string) {
+    this.editandoCausa = this.editandoCausa === id ? null : id;
+  }
+
+  elegirCausa(h: Hueco, causa: CausaHueco) {
+    this.data.actualizarCausa(h.id, causa);
+    this.editandoCausa = null;
+  }
+
+  confirmarSugerida(h: Hueco, evento: Event) {
+    evento.stopPropagation();
+    this.data.confirmarCausa(h.id);
   }
 
   generarTareas() {

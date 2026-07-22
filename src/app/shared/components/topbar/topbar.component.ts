@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { RolService } from '../../../core/services/rol.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { RolUsuario } from '../../../core/models/osa.models';
 
 @Component({
@@ -13,6 +14,7 @@ import { RolUsuario } from '../../../core/models/osa.models';
 })
 export class TopbarComponent {
   rolService = inject(RolService);
+  authService = inject(AuthService);
 
   get rolActivo() {
     return this.rolService.rolActivo();
@@ -20,5 +22,9 @@ export class TopbarComponent {
 
   elegirRol(rol: RolUsuario) {
     this.rolService.setRol(rol);
+  }
+
+  cerrarSesion() {
+    this.authService.logout();
   }
 }
