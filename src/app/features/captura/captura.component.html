@@ -8,11 +8,23 @@
       <h3>Imagen del anaquel</h3>
       <p class="hint">JPG o PNG · máx 20 MB · se redimensiona a 1280px antes de enviar</p>
 
-      <div class="dropzone" role="button" tabindex="0" aria-label="Zona para subir imagen">
-        <div class="dz-icon">📷</div>
-        <p>Arrastra la foto aquí o haz clic para elegir</p>
-        <small>También puedes capturar directo desde tablet en piso de venta</small>
+      <input #inputArchivo type="file" accept="image/jpeg,image/png,image/webp" hidden
+             (change)="onArchivoSeleccionado($event)" />
+
+      <div class="dropzone" [class.tiene-imagen]="previewUrl()" role="button" tabindex="0"
+           aria-label="Zona para subir imagen"
+           (click)="abrirSelector()" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+        <ng-container *ngIf="!previewUrl(); else conImagen">
+          <div class="dz-icon">📷</div>
+          <p>Arrastra la foto aquí o haz clic para elegir</p>
+          <small>También puedes capturar directo desde tablet en piso de venta</small>
+        </ng-container>
+        <ng-template #conImagen>
+          <img [src]="previewUrl()" alt="Vista previa del anaquel" class="preview" />
+        </ng-template>
       </div>
+      <button type="button" class="btn-quitar" *ngIf="previewUrl()"
+              (click)="quitarArchivo(); $event.stopPropagation()">Quitar imagen</button>
 
       <div class="field-row">
         <div class="field">
@@ -25,9 +37,9 @@
         </div>
         <div class="field">
           <label for="selCharola">Sección de anaquel</label>
-          <select id="selCharola">
-            <option>Módulo 4-B · Leches</option>
-            <option>Módulo 4-C · Yogurts</option>
+          <select id="selCharola" [disabled]="!secciones().length"
+                  [ngModel]="seccionId()" (ngModelChange)="seccionId.set($event)">
+            <option *ngFor="let s of secciones()" [value]="s.seccion_id">{{ s.nombre }}</option>
           </select>
         </div>
       </div>
@@ -52,18 +64,20 @@
         </button>
       </div>
 
-      <button class="btn btn-primary btn-block" [disabled]="analizando" (click)="analizar()">
+      <p class="error-real" *ngIf="errorReal()">⚠ {{ errorReal() }}</p>
+
+      <button class="btn btn-primary btn-block" [disabled]="analizando || analizandoReal()" (click)="analizar()">
         Analizar anaquel
       </button>
 
-      <div class="analizando" [class.on]="analizando">
+      <div class="analizando" [class.on]="analizando || analizandoReal()">
         <div class="spinner" aria-hidden="true"></div>
         <p>Analizando imagen con modelo de visión…</p>
         <small>Detección de huecos → identificación de SKU esperado → cruce con inventario</small>
       </div>
     </div>
 
-    <div class="card card-pad">
+    <div class="card card-pad" *ngIf="!resultadoReal()">
       <h3>¿Qué pasa al analizar?</h3>
       <p class="hint">Pipeline de la PoC en dos bloques</p>
       <ol class="pipeline">
@@ -73,6 +87,24 @@
         <li><span class="step-num">4</span><div><b>Clasificación de causa</b><small>Las 10 causas del reporte F9: en bodega, error operativo, proveedor, tránsito, etc.</small></div></li>
         <li><span class="step-num">5</span><div><b>Acción sugerida</b><small>Se genera tarea de reposición o alerta al área correspondiente.</small></div></li>
       </ol>
+    </div>
+
+    <div class="card card-pad resultado-real" *ngIf="resultadoReal() as resultado">
+      <h3>Resultado del modelo de visión</h3>
+      <p class="hint">{{ resultado.resumen }}</p>
+
+      <div class="hueco-real" *ngFor="let h of resultado.huecos">
+        <div class="top">
+          <b>{{ h.producto }}</b>
+          <span class="estado-chip" [class.parcial]="h.estado === 'parcial'">
+            {{ h.estado === 'vacio' ? 'Vacío' : 'Parcial' }}
+          </span>
+        </div>
+        <p class="pos">SKU {{ h.sku }} · {{ h.posicion }} · {{ h.facings_esperados }} piezas esperadas</p>
+        <p class="conf">Confianza del modelo: {{ h.confianza * 100 | number:'1.0-0' }}%</p>
+      </div>
+
+      <p class="ok-msg" *ngIf="!resultado.huecos.length">✓ No se detectaron huecos contra el planograma.</p>
     </div>
   </div>
 </section>
