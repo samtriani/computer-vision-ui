@@ -1,6 +1,15 @@
 import { Injectable, signal } from '@angular/core';
 import { RolInfo, RolUsuario } from '../models/osa.models';
 
+// Mismas rutas que ve cada rol en la nav del topbar — única fuente de verdad,
+// la usan también el guard de rutas y el login para saber a dónde mandar a
+// cada rol.
+const RUTAS_PERMITIDAS: Record<RolUsuario, string[]> = {
+  operativo: ['/captura'],
+  tienda: ['/captura', '/resultado', '/dashboard'],
+  ejecutivo: ['/dashboard'],
+};
+
 @Injectable({ providedIn: 'root' })
 export class RolService {
   readonly roles: RolInfo[] = [
@@ -32,5 +41,17 @@ export class RolService {
 
   infoDe(rol: RolUsuario): RolInfo {
     return this.roles.find(r => r.id === rol)!;
+  }
+
+  rutasPermitidas(rol: RolUsuario = this.rolActivo()): string[] {
+    return RUTAS_PERMITIDAS[rol];
+  }
+
+  rutaPorDefecto(rol: RolUsuario = this.rolActivo()): string {
+    return this.rutasPermitidas(rol)[0];
+  }
+
+  rutaPermitida(url: string, rol: RolUsuario = this.rolActivo()): boolean {
+    return this.rutasPermitidas(rol).some(ruta => url.startsWith(ruta));
   }
 }

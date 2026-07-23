@@ -20,6 +20,18 @@ export class ResultadoComponent {
     return this.data.huecos();
   }
 
+  get origen() {
+    return this.data.origenResultado();
+  }
+
+  get imagenAnaquelUrl() {
+    return this.data.imagenAnaquelUrl();
+  }
+
+  get resumenVision() {
+    return this.data.resumenVision();
+  }
+
   huecoSeleccionado: string | null = null;
   editandoCausa: string | null = null;
 

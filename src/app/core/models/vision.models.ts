@@ -29,3 +29,23 @@ export interface AnalizarImagenResponse {
   resumen: string;
   huecos: HuecoDetectado[];
 }
+
+export interface HuecoVisual {
+  id: string;
+  nivel: number;
+  posicion: string;
+  categoria_esperada: string;
+  marcas_esperadas: string;
+  estado: EstadoPosicion;
+  confianza: number;
+}
+
+export interface AnalizarConReferenciaResponse {
+  resumen: string;
+  huecos: HuecoVisual[];
+}
+
+export interface CategoriaVisual {
+  id: string;
+  nombre: string;
+}

@@ -1,7 +1,7 @@
 <section class="page">
   <p class="eyebrow">Bloque 1 · Lo que ves</p>
   <h1>Captura de anaquel</h1>
-  <p class="sub">Sube una foto del anaquel o selecciona una imagen de muestra. El modelo de visión detecta huecos y los cruza contra el planograma de la tienda.</p>
+  <p class="sub">Sube una foto del anaquel. El modelo de visión detecta huecos y los cruza contra el planograma de la sección elegida.</p>
 
   <div class="grid-captura">
     <div class="card card-pad">
@@ -29,55 +29,50 @@
       <div class="field-row">
         <div class="field">
           <label for="selPasillo">Pasillo / Categoría</label>
-          <select id="selPasillo">
-            <option>P-04 · Lácteos</option>
-            <option>P-07 · Abarrotes secos</option>
-            <option>P-11 · Cuidado personal</option>
+          <select id="selPasillo" [disabled]="!categorias().length"
+                  [ngModel]="categoriaId()" (ngModelChange)="elegirCategoria($event)">
+            <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
           </select>
         </div>
-        <div class="field">
+        <div class="field" *ngIf="!modoVisual()">
           <label for="selCharola">Sección de anaquel</label>
-          <select id="selCharola" [disabled]="!secciones().length"
+          <select id="selCharola" [disabled]="!seccionesFiltradas().length"
                   [ngModel]="seccionId()" (ngModelChange)="seccionId.set($event)">
-            <option *ngFor="let s of secciones()" [value]="s.seccion_id">{{ s.nombre }}</option>
+            <option *ngFor="let s of seccionesFiltradas()" [value]="s.seccion_id">{{ s.nombre }}</option>
           </select>
         </div>
       </div>
 
-      <h3 style="margin-top:24px">O usa una muestra</h3>
-      <div class="samples">
-        <button *ngFor="let m of muestras"
-                class="sample" [class.selected]="muestraSeleccionada === m.id"
-                (click)="elegirMuestra(m.id)">
-          <svg viewBox="0 0 120 68">
-            <rect width="120" height="68" fill="#F3EDE5"/>
-            <rect x="6" y="10" width="108" height="4" fill="#C9BFB3"/>
-            <rect x="6" y="32" width="108" height="4" fill="#C9BFB3"/>
-            <rect x="6" y="54" width="108" height="4" fill="#C9BFB3"/>
-            <rect x="10" y="16" width="14" height="14" rx="2" [attr.fill]="m.id === 0 ? '#7FB539' : (m.id === 1 ? '#F16521' : '#7FB539')"/>
-            <rect x="27" y="16" width="14" height="14" rx="2" fill="#7FB539"/>
-            <rect x="44" y="16" width="14" height="14" rx="2" [attr.fill]="m.id === 2 ? '#7FB539' : '#F16521'"/>
-            <rect x="61" y="38" width="14" height="14" rx="2" fill="#E9A13B"/>
-            <rect x="78" y="16" width="14" height="14" rx="2" fill="#7FB539"/>
-          </svg>
-          <span>{{ m.etiqueta }}</span>
-        </button>
+      <div class="card modo-visual-toggle">
+        <label class="switch-row" [class.disabled]="!categoriaActual()?.tieneVisual">
+          <input type="checkbox" [checked]="modoVisual()" [disabled]="!categoriaActual()?.tieneVisual"
+                 (change)="toggleModoVisual($any($event.target).checked)" />
+          <span>
+            <b>🧈 Modo planograma completo (foto real)</b>
+            <small *ngIf="categoriaActual()?.tieneVisual">Compara tu foto directo contra la foto del planograma de referencia de la categoría — sin catálogo de SKU, el modelo lee ambas imágenes.</small>
+            <small *ngIf="!categoriaActual()?.tieneVisual">Esta categoría todavía no tiene foto de planograma de referencia — usa el catálogo de SKU (Sección de anaquel).</small>
+          </span>
+        </label>
+        <div class="referencia-preview" *ngIf="modoVisual()">
+          <img *ngIf="referenciaUrl() as ref" [src]="ref" alt="Planograma de referencia" />
+          <p *ngIf="!referenciaUrl()" class="hint">Cargando planograma de referencia…</p>
+        </div>
       </div>
 
       <p class="error-real" *ngIf="errorReal()">⚠ {{ errorReal() }}</p>
 
-      <button class="btn btn-primary btn-block" [disabled]="analizando || analizandoReal()" (click)="analizar()">
+      <button class="btn btn-primary btn-block" [disabled]="analizandoReal()" (click)="analizar()">
         Analizar anaquel
       </button>
 
-      <div class="analizando" [class.on]="analizando || analizandoReal()">
+      <div class="analizando" [class.on]="analizandoReal()">
         <div class="spinner" aria-hidden="true"></div>
         <p>Analizando imagen con modelo de visión…</p>
         <small>Detección de huecos → identificación de SKU esperado → cruce con inventario</small>
       </div>
     </div>
 
-    <div class="card card-pad" *ngIf="!resultadoReal()">
+    <div class="card card-pad" *ngIf="!resultadoReal() && !resultadoVisual()">
       <h3>¿Qué pasa al analizar?</h3>
       <p class="hint">Pipeline de la PoC en dos bloques</p>
       <ol class="pipeline">
@@ -102,9 +97,51 @@
         </div>
         <p class="pos">SKU {{ h.sku }} · {{ h.posicion }} · {{ h.facings_esperados }} piezas esperadas</p>
         <p class="conf">Confianza del modelo: {{ h.confianza * 100 | number:'1.0-0' }}%</p>
+        <div class="causa-select">
+          <label [for]="'causa-' + h.posicion_id">Causa probable</label>
+          <select [id]="'causa-' + h.posicion_id"
+                  [ngModel]="causaDe(h.posicion_id)"
+                  (ngModelChange)="elegirCausa(h.posicion_id, $event)">
+            <option *ngFor="let c of catalogoCausas" [value]="c">{{ causaLabel[c] }}</option>
+          </select>
+        </div>
       </div>
 
       <p class="ok-msg" *ngIf="!resultado.huecos.length">✓ No se detectaron huecos contra el planograma.</p>
+
+      <button class="btn btn-primary btn-block" style="margin-top:16px" (click)="continuarConCausas()">
+        Continuar → clasificar causas
+      </button>
+    </div>
+
+    <div class="card card-pad resultado-real" *ngIf="resultadoVisual() as resultado">
+      <h3>Resultado: comparación contra planograma real</h3>
+      <p class="hint">{{ resultado.resumen }}</p>
+
+      <div class="hueco-real" *ngFor="let h of resultado.huecos">
+        <div class="top">
+          <b>Nivel {{ h.nivel }} · {{ h.categoria_esperada }}</b>
+          <span class="estado-chip" [class.parcial]="h.estado === 'parcial'">
+            {{ h.estado === 'vacio' ? 'Vacío' : 'Parcial' }}
+          </span>
+        </div>
+        <p class="pos">{{ h.posicion }} · se esperaba: {{ h.marcas_esperadas }}</p>
+        <p class="conf">Confianza del modelo: {{ h.confianza * 100 | number:'1.0-0' }}%</p>
+        <div class="causa-select">
+          <label [for]="'causa-' + h.id">Causa probable</label>
+          <select [id]="'causa-' + h.id"
+                  [ngModel]="causaDe(h.id)"
+                  (ngModelChange)="elegirCausa(h.id, $event)">
+            <option *ngFor="let c of catalogoCausas" [value]="c">{{ causaLabel[c] }}</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="ok-msg" *ngIf="!resultado.huecos.length">✓ El anaquel coincide con el planograma de referencia.</p>
+
+      <button class="btn btn-primary btn-block" style="margin-top:16px" (click)="continuarConCausas()">
+        Continuar → clasificar causas
+      </button>
     </div>
   </div>
 </section>

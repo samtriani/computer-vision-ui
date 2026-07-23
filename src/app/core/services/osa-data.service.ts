@@ -11,8 +11,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class OsaDataService {
-  // ---- Estado de la última "captura" analizada (dummy) ----
-  analizando = signal(false);
+  // ---- Estado de la última "captura" analizada (dummy hasta que se carga un análisis real) ----
   huecos = signal<Hueco[]>([
     {
       id: 'H-01',
@@ -48,6 +47,18 @@ export class OsaDataService {
       sistema: 12,
     },
   ]);
+
+  // ---- Resultado mostrado en /resultado: dummy hasta que se carga un análisis real ----
+  origenResultado = signal<'dummy' | 'vision'>('dummy');
+  imagenAnaquelUrl = signal<string | null>(null);
+  resumenVision = signal<string | null>(null);
+
+  cargarResultadoVision(huecos: Hueco[], imagenUrl: string | null, resumen: string) {
+    this.huecos.set(huecos);
+    this.imagenAnaquelUrl.set(imagenUrl);
+    this.resumenVision.set(resumen);
+    this.origenResultado.set('vision');
+  }
 
   // ---- Datos ejecutivos (dummy, con la estructura real del F9: Formato / Subdirector / cumplimiento) ----
   tiendas: Tienda[] = [
@@ -114,15 +125,5 @@ export class OsaDataService {
     this.huecos.update(lista =>
       lista.map(h => (h.id === id ? { ...h, causaConfirmada: true } : h))
     );
-  }
-
-  analizarImagen(): Promise<void> {
-    this.analizando.set(true);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        this.analizando.set(false);
-        resolve();
-      }, 2200);
-    });
   }
 }

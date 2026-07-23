@@ -3,16 +3,34 @@
     <div>
       <p class="eyebrow">Bloque 1 + Bloque 2 · Qué hacer</p>
       <h1>Análisis del anaquel</h1>
-      <div class="result-meta">
+      <div class="result-meta" *ngIf="origen === 'dummy'; else metaVision">
         <span class="chip">La Comer Insurgentes</span>
         <span class="chip">P-04 Lácteos · Módulo 4-B</span>
         <span class="chip">Hoy · 7:02 am</span>
         <span class="chip">Confianza del modelo: 93%</span>
       </div>
+      <ng-template #metaVision>
+        <div class="result-meta">
+          <span class="chip">Análisis con modelo de visión (Groq)</span>
+          <span class="chip">Hoy</span>
+        </div>
+      </ng-template>
     </div>
   </div>
 
   <div class="grid-result">
+    <div class="card shelf-card" *ngIf="origen === 'vision'; else shelfDummy">
+      <div class="shelf-title">
+        <h3>Foto real analizada</h3>
+        <div class="legend">
+          <span><i style="background:var(--rojo)"></i>{{ huecos.length }} hueco(s) detectado(s) por el modelo</span>
+        </div>
+      </div>
+      <img *ngIf="imagenAnaquelUrl as url" [src]="url" alt="Foto del anaquel analizada" class="foto-real" />
+      <p class="hint" style="margin-top:12px" *ngIf="resumenVision">{{ resumenVision }}</p>
+    </div>
+
+    <ng-template #shelfDummy>
     <div class="card shelf-card">
       <div class="shelf-title">
         <h3>Anaquel digitalizado vs planograma</h3>
@@ -66,13 +84,19 @@
         </g>
       </svg>
     </div>
+    </ng-template>
 
     <div>
-      <div class="kpi-mini">
+      <div class="kpi-mini" *ngIf="origen === 'dummy'; else kpiVision">
         <div class="card kpi-box"><div class="num">18</div><div class="lbl">Posiciones</div></div>
         <div class="card kpi-box"><div class="num bad">{{ huecos.length }}</div><div class="lbl">Huecos</div></div>
         <div class="card kpi-box"><div class="num warn">83.3%</div><div class="lbl">OSA módulo</div></div>
       </div>
+      <ng-template #kpiVision>
+        <div class="kpi-mini" style="grid-template-columns:1fr">
+          <div class="card kpi-box"><div class="num bad">{{ huecos.length }}</div><div class="lbl">Huecos detectados</div></div>
+        </div>
+      </ng-template>
 
       <div class="card tabla-huecos">
         <div class="card-pad">

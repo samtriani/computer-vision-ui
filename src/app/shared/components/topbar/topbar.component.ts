@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RolService } from '../../../core/services/rol.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { RolUsuario } from '../../../core/models/osa.models';
@@ -15,6 +15,7 @@ import { RolUsuario } from '../../../core/models/osa.models';
 export class TopbarComponent {
   rolService = inject(RolService);
   authService = inject(AuthService);
+  private router = inject(Router);
 
   get rolActivo() {
     return this.rolService.rolActivo();
@@ -22,6 +23,9 @@ export class TopbarComponent {
 
   elegirRol(rol: RolUsuario) {
     this.rolService.setRol(rol);
+    if (!this.rolService.rutaPermitida(this.router.url, rol)) {
+      this.router.navigate([this.rolService.rutaPorDefecto(rol)]);
+    }
   }
 
   cerrarSesion() {
