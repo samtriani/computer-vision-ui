@@ -5,8 +5,17 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { OsaDataService } from '../../core/services/osa-data.service';
 import { VisionService } from '../../core/services/vision.service';
-import { AnalizarConReferenciaResponse, AnalizarImagenResponse, Planograma } from '../../core/models/vision.models';
+import { AnalizarConReferenciaResponse, AnalizarImagenResponse, EstadoPosicion, Planograma } from '../../core/models/vision.models';
 import { CAUSA_LABEL, CausaHueco, Hueco } from '../../core/models/osa.models';
+
+// "surtido_incorrecto" no es un hueco físico (el espacio tiene producto), es un
+// error de acomodo — se muestra distinto para no confundir al operador con un
+// vacío real. Ver conversación sobre el falso "VACÍO" en el nivel de refrescos.
+const ESTADO_LABEL: Record<EstadoPosicion, string> = {
+  vacio: 'Vacío',
+  parcial: 'Parcial',
+  surtido_incorrecto: 'Surtido incorrecto',
+};
 
 interface Categoria {
   id: string;
@@ -95,6 +104,7 @@ export class CapturaComponent {
   causaLabel = CAUSA_LABEL;
   catalogoCausas = Object.keys(CAUSA_LABEL) as CausaHueco[];
   causaSeleccionada = signal<Record<string, CausaHueco>>({});
+  estadoLabel = ESTADO_LABEL;
 
   elegirCausa(id: string, causa: CausaHueco) {
     this.causaSeleccionada.update(m => ({ ...m, [id]: causa }));

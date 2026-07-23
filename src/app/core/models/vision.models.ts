@@ -12,7 +12,7 @@ export interface Planograma {
   posiciones: PosicionPlanograma[];
 }
 
-export type EstadoPosicion = 'vacio' | 'parcial';
+export type EstadoPosicion = 'vacio' | 'parcial' | 'surtido_incorrecto';
 
 export interface HuecoDetectado {
   posicion_id: string;

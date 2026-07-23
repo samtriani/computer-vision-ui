@@ -91,8 +91,8 @@
       <div class="hueco-real" *ngFor="let h of resultado.huecos">
         <div class="top">
           <b>{{ h.producto }}</b>
-          <span class="estado-chip" [class.parcial]="h.estado === 'parcial'">
-            {{ h.estado === 'vacio' ? 'Vacío' : 'Parcial' }}
+          <span class="estado-chip" [ngClass]="'estado-' + h.estado">
+            {{ estadoLabel[h.estado] }}
           </span>
         </div>
         <p class="pos">SKU {{ h.sku }} · {{ h.posicion }} · {{ h.facings_esperados }} piezas esperadas</p>
@@ -121,8 +121,8 @@
       <div class="hueco-real" *ngFor="let h of resultado.huecos">
         <div class="top">
           <b>Nivel {{ h.nivel }} · {{ h.categoria_esperada }}</b>
-          <span class="estado-chip" [class.parcial]="h.estado === 'parcial'">
-            {{ h.estado === 'vacio' ? 'Vacío' : 'Parcial' }}
+          <span class="estado-chip" [ngClass]="'estado-' + h.estado">
+            {{ estadoLabel[h.estado] }}
           </span>
         </div>
         <p class="pos">{{ h.posicion }} · se esperaba: {{ h.marcas_esperadas }}</p>
