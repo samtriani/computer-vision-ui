@@ -37,10 +37,15 @@
         <div class="field" *ngIf="!modoVisual()">
           <label for="selCharola">Sección de anaquel</label>
           <select id="selCharola" [disabled]="!seccionesFiltradas().length"
-                  [ngModel]="seccionId()" (ngModelChange)="seccionId.set($event)">
+                  [ngModel]="seccionId()" (ngModelChange)="elegirSeccion($event)">
             <option *ngFor="let s of seccionesFiltradas()" [value]="s.seccion_id">{{ s.nombre }}</option>
           </select>
         </div>
+      </div>
+
+      <div class="referencia-preview referencia-seccion" *ngIf="!modoVisual() && referenciaSeccionUrl() as ref">
+        <p class="hint">📸 Así debería lucir esta sección (planograma real)</p>
+        <img [src]="ref" alt="Planograma de referencia de la sección" />
       </div>
 
       <div class="card modo-visual-toggle">

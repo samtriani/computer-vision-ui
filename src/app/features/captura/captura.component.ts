@@ -80,6 +80,11 @@ export class CapturaComponent {
   archivo = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
 
+  // Foto fotorrealista del propio PDF de planograma para la "Sección de
+  // anaquel" elegida (modo catálogo) — solo ilustrativa, no todas las
+  // secciones la tienen todavía.
+  referenciaSeccionUrl = signal<string | null>(null);
+
   analizandoReal = signal(false);
   errorReal = signal<string | null>(null);
   resultadoReal = signal<AnalizarImagenResponse | null>(null);
@@ -136,7 +141,7 @@ export class CapturaComponent {
     }
 
     const primeraSeccion = this.seccionesFiltradas()[0];
-    this.seccionId.set(cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null);
+    this.elegirSeccion(cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null);
 
     if (cat.tieneVisual) {
       this.cargarReferenciaVisual(id);
@@ -151,6 +156,24 @@ export class CapturaComponent {
     } else if (cat.tieneCatalogo && !cat.tieneVisual) {
       this.modoVisual.set(false);
     }
+  }
+
+  elegirSeccion(seccionId: string | null) {
+    this.seccionId.set(seccionId);
+    const anterior = this.referenciaSeccionUrl();
+    if (anterior) {
+      URL.revokeObjectURL(anterior);
+    }
+    this.referenciaSeccionUrl.set(null);
+    if (!seccionId) {
+      return;
+    }
+    this.vision.obtenerReferenciaSeccion(seccionId).subscribe({
+      // Silencioso si no existe (404): la mayoría de las secciones todavía no
+      // tienen foto fotorrealista digitalizada, y eso no es un error.
+      next: blob => this.referenciaSeccionUrl.set(URL.createObjectURL(blob)),
+      error: () => this.referenciaSeccionUrl.set(null),
+    });
   }
 
   private cargarReferenciaVisual(categoriaId: string) {
