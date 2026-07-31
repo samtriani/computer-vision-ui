@@ -99,6 +99,10 @@ export class CapturaComponent {
   referenciaUrl = signal<string | null>(null);
   resultadoVisual = signal<AnalizarConReferenciaResponse | null>(null);
 
+  // ---- Foto ilustrativa por sección/tramo (modo catálogo) -- no todas las
+  // secciones la tienen todavía, así que un 404 simplemente no muestra nada ----
+  referenciaSeccionUrl = signal<string | null>(null);
+
   // ---- Causa sugerida por el operador para cada hueco, elegida directo en la
   // tarjeta de resultado (antes de mandarlo al flujo de clasificación) ----
   causaLabel = CAUSA_LABEL;
@@ -146,7 +150,13 @@ export class CapturaComponent {
     }
 
     const primeraSeccion = this.seccionesFiltradas()[0];
-    this.seccionId.set(cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null);
+    const seccionInicial = cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null;
+    this.seccionId.set(seccionInicial);
+    if (seccionInicial) {
+      this.cargarReferenciaSeccion(seccionInicial);
+    } else {
+      this.limpiarReferenciaSeccion();
+    }
 
     if (cat.tieneVisual) {
       this.cargarReferenciaVisual(id);
@@ -177,6 +187,27 @@ export class CapturaComponent {
       URL.revokeObjectURL(anterior);
     }
     this.referenciaUrl.set(null);
+  }
+
+  elegirSeccion(seccionId: string) {
+    this.seccionId.set(seccionId);
+    this.cargarReferenciaSeccion(seccionId);
+  }
+
+  private cargarReferenciaSeccion(seccionId: string) {
+    this.limpiarReferenciaSeccion();
+    this.vision.obtenerReferenciaSeccion(seccionId).subscribe({
+      next: blob => this.referenciaSeccionUrl.set(URL.createObjectURL(blob)),
+      error: () => this.referenciaSeccionUrl.set(null), // no todas las secciones tienen foto todavía
+    });
+  }
+
+  private limpiarReferenciaSeccion() {
+    const anterior = this.referenciaSeccionUrl();
+    if (anterior) {
+      URL.revokeObjectURL(anterior);
+    }
+    this.referenciaSeccionUrl.set(null);
   }
 
   abrirSelector() {

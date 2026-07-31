@@ -34,6 +34,12 @@ export class VisionService {
     return this.http.get(`${environment.apiUrl}/vision/referencia/${categoriaId}`, { responseType: 'blob' });
   }
 
+  // Foto ilustrativa por sección/tramo (modo catálogo) -- no todas las
+  // secciones la tienen todavía, el caller debe manejar el 404.
+  obtenerReferenciaSeccion(seccionId: string): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/vision/secciones/${seccionId}/referencia`, { responseType: 'blob' });
+  }
+
   analizarConReferencia(imagenAnaquel: File, categoriaId: string): Observable<AnalizarConReferenciaResponse> {
     const formData = new FormData();
     formData.append('imagen_anaquel', imagenAnaquel);
