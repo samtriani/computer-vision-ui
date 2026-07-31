@@ -24,15 +24,6 @@ export class VisionService {
     return this.http.post<AnalizarImagenResponse>(`${environment.apiUrl}/vision/analizar`, formData);
   }
 
-  // Foto fotorrealista del planograma oficial para la sección (solo
-  // ilustrativa) — no todas las secciones la tienen, el caller debe manejar
-  // el 404. Vía blob por el mismo motivo que obtenerReferencia().
-  obtenerReferenciaSeccion(seccionId: string): Observable<Blob> {
-    return this.http.get(`${environment.apiUrl}/vision/secciones/${seccionId}/referencia`, {
-      responseType: 'blob',
-    });
-  }
-
   listarCategoriasVisuales(): Observable<CategoriaVisual[]> {
     return this.http.get<CategoriaVisual[]>(`${environment.apiUrl}/vision/categorias-visuales`);
   }
@@ -41,6 +32,12 @@ export class VisionService {
   // interceptor solo agrega a peticiones hechas con HttpClient.
   obtenerReferencia(categoriaId: string): Observable<Blob> {
     return this.http.get(`${environment.apiUrl}/vision/referencia/${categoriaId}`, { responseType: 'blob' });
+  }
+
+  // Foto ilustrativa por sección/tramo (modo catálogo) -- no todas las
+  // secciones la tienen todavía, el caller debe manejar el 404.
+  obtenerReferenciaSeccion(seccionId: string): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/vision/secciones/${seccionId}/referencia`, { responseType: 'blob' });
   }
 
   analizarConReferencia(imagenAnaquel: File, categoriaId: string): Observable<AnalizarConReferenciaResponse> {

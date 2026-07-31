@@ -43,8 +43,8 @@
         </div>
       </div>
 
-      <div class="referencia-preview referencia-seccion" *ngIf="!modoVisual() && referenciaSeccionUrl() as ref">
-        <p class="hint">📸 Así debería lucir esta sección (planograma real)</p>
+      <div class="referencia-preview" *ngIf="!modoVisual() && referenciaSeccionUrl() as ref">
+        <p class="hint">Foto de referencia del planograma de esta sección (ilustrativa)</p>
         <img [src]="ref" alt="Planograma de referencia de la sección" />
       </div>
 

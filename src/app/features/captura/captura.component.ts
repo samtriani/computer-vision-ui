@@ -89,11 +89,6 @@ export class CapturaComponent {
   archivo = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
 
-  // Foto fotorrealista del propio PDF de planograma para la "Sección de
-  // anaquel" elegida (modo catálogo) — solo ilustrativa, no todas las
-  // secciones la tienen todavía.
-  referenciaSeccionUrl = signal<string | null>(null);
-
   analizandoReal = signal(false);
   errorReal = signal<string | null>(null);
   resultadoReal = signal<AnalizarImagenResponse | null>(null);
@@ -103,6 +98,10 @@ export class CapturaComponent {
   modoVisual = signal(false);
   referenciaUrl = signal<string | null>(null);
   resultadoVisual = signal<AnalizarConReferenciaResponse | null>(null);
+
+  // ---- Foto ilustrativa por sección/tramo (modo catálogo) -- no todas las
+  // secciones la tienen todavía, así que un 404 simplemente no muestra nada ----
+  referenciaSeccionUrl = signal<string | null>(null);
 
   // ---- Causa sugerida por el operador para cada hueco, elegida directo en la
   // tarjeta de resultado (antes de mandarlo al flujo de clasificación) ----
@@ -151,7 +150,13 @@ export class CapturaComponent {
     }
 
     const primeraSeccion = this.seccionesFiltradas()[0];
-    this.elegirSeccion(cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null);
+    const seccionInicial = cat.tieneCatalogo && primeraSeccion ? primeraSeccion.seccion_id : null;
+    this.seccionId.set(seccionInicial);
+    if (seccionInicial) {
+      this.cargarReferenciaSeccion(seccionInicial);
+    } else {
+      this.limpiarReferenciaSeccion();
+    }
 
     if (cat.tieneVisual) {
       this.cargarReferenciaVisual(id);
@@ -168,24 +173,6 @@ export class CapturaComponent {
     }
   }
 
-  elegirSeccion(seccionId: string | null) {
-    this.seccionId.set(seccionId);
-    const anterior = this.referenciaSeccionUrl();
-    if (anterior) {
-      URL.revokeObjectURL(anterior);
-    }
-    this.referenciaSeccionUrl.set(null);
-    if (!seccionId) {
-      return;
-    }
-    this.vision.obtenerReferenciaSeccion(seccionId).subscribe({
-      // Silencioso si no existe (404): la mayoría de las secciones todavía no
-      // tienen foto fotorrealista digitalizada, y eso no es un error.
-      next: blob => this.referenciaSeccionUrl.set(URL.createObjectURL(blob)),
-      error: () => this.referenciaSeccionUrl.set(null),
-    });
-  }
-
   private cargarReferenciaVisual(categoriaId: string) {
     this.limpiarReferenciaVisual();
     this.vision.obtenerReferencia(categoriaId).subscribe({
@@ -200,6 +187,27 @@ export class CapturaComponent {
       URL.revokeObjectURL(anterior);
     }
     this.referenciaUrl.set(null);
+  }
+
+  elegirSeccion(seccionId: string) {
+    this.seccionId.set(seccionId);
+    this.cargarReferenciaSeccion(seccionId);
+  }
+
+  private cargarReferenciaSeccion(seccionId: string) {
+    this.limpiarReferenciaSeccion();
+    this.vision.obtenerReferenciaSeccion(seccionId).subscribe({
+      next: blob => this.referenciaSeccionUrl.set(URL.createObjectURL(blob)),
+      error: () => this.referenciaSeccionUrl.set(null), // no todas las secciones tienen foto todavía
+    });
+  }
+
+  private limpiarReferenciaSeccion() {
+    const anterior = this.referenciaSeccionUrl();
+    if (anterior) {
+      URL.revokeObjectURL(anterior);
+    }
+    this.referenciaSeccionUrl.set(null);
   }
 
   abrirSelector() {
