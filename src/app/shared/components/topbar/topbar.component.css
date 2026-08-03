@@ -1,8 +1,12 @@
 .topbar{background:var(--blanco);border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:50}
 .topbar-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-mark{width:38px;height:38px;border-radius:50%;background:var(--naranja);display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px;letter-spacing:-.5px;flex-shrink:0}
-.brand-name{font-weight:800;font-size:17px;letter-spacing:-.3px;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:14px}
+/* El logo viene sobre fondo blanco (el pelicano es blanco y se funde con el
+   fondo, asi que no admite transparencia por color); la topbar tambien es
+   blanca, asi que asienta sin recuadro visible. El width/height del <img>
+   evita el salto de layout mientras carga. */
+.brand-logo{height:30px;width:auto;flex-shrink:0}
+.brand-name{font-weight:800;font-size:17px;letter-spacing:-.3px;white-space:nowrap;padding-left:14px;border-left:1px solid var(--borde)}
 .brand-name small{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--naranja)}
 
 .nav{display:flex;gap:4px}

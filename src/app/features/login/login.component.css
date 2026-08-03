@@ -1,7 +1,8 @@
 .login-page{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:32px 20px;background:var(--crema)}
 
 .login-card{width:100%;max-width:380px;padding:32px;text-align:center}
-.login-card .brand-mark{width:48px;height:48px;border-radius:50%;background:var(--naranja);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;letter-spacing:-.5px;margin:0 auto 16px}
+/* La card del login es blanca, igual que el fondo del logo. */
+.login-card .brand-logo{height:38px;width:auto;display:block;margin:0 auto 18px}
 .login-card .eyebrow{margin-bottom:2px}
 .login-card h1{font-size:24px;font-weight:900;letter-spacing:-.5px;margin:0}
 .login-card .sub{color:var(--tinta-2);font-size:14px;margin:8px 0 24px}
