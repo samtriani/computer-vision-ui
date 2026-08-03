@@ -33,8 +33,17 @@ interface Categoria {
 // "lacteos-4b" — la categoría es el prefijo antes del guion.
 const CATEGORIA_LABEL_CATALOGO: Record<string, string> = {
   lacteos: 'Lácteos',
-  abarrotes: 'Abarrotes secos',
+  suavizantes: 'Suavizantes de ropa',
+  aderezos: 'Aderezos',
 };
+
+/** Última red para que ninguna categoría se muestre con el id crudo en
+ *  minúsculas si mañana se agrega un planograma con un prefijo nuevo: en el
+ *  combo conviven nombres del backend y de este archivo, y una entrada en
+ *  minúsculas entre las demás se ve como un error. */
+function titular(id: string): string {
+  return id.charAt(0).toUpperCase() + id.slice(1);
+}
 
 function catalogoCategoriaId(seccion: Planograma): string {
   return seccion.seccion_id.split('-')[0];
@@ -68,7 +77,7 @@ export class CapturaComponent {
     for (const id of catalogoIds) {
       lista.push({
         id,
-        nombre: CATEGORIA_LABEL_CATALOGO[id] ?? nombresVisuales[id] ?? id,
+        nombre: CATEGORIA_LABEL_CATALOGO[id] ?? nombresVisuales[id] ?? titular(id),
         tieneCatalogo: true,
         tieneVisual: visualIds.has(id),
       });
