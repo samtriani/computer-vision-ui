@@ -12,14 +12,20 @@ export interface Planograma {
   posiciones: PosicionPlanograma[];
 }
 
-export type EstadoPosicion = 'vacio' | 'parcial' | 'surtido_incorrecto';
+export type EstadoPosicion = 'vacio' | 'parcial' | 'sobrante' | 'surtido_incorrecto';
 
 export interface HuecoDetectado {
   posicion_id: string;
   posicion: string;
   sku: string;
   producto: string;
+  /** Descripción del envase como se ve en piso ("bolsa amarilla 1.3L"); el
+   *  planograma solo trae la marca y se repite en casi todas las posiciones. */
+  descripcion: string;
   facings_esperados: number;
+  piezas_detectadas: number | null;
+  /** detectadas - esperadas: negativo = faltan piezas, positivo = sobran. */
+  diferencia: number | null;
   estado: EstadoPosicion;
   confianza: number;
 }

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { OsaDataService } from '../../core/services/osa-data.service';
 import { VisionService } from '../../core/services/vision.service';
-import { AnalizarConReferenciaResponse, AnalizarImagenResponse, EstadoPosicion, Planograma } from '../../core/models/vision.models';
+import { AnalizarConReferenciaResponse, AnalizarImagenResponse, EstadoPosicion, HuecoDetectado, Planograma } from '../../core/models/vision.models';
 import { CAUSA_LABEL, CausaHueco, Hueco } from '../../core/models/osa.models';
 
 // "surtido_incorrecto" no es un hueco físico (el espacio tiene producto), es un
@@ -14,6 +14,7 @@ import { CAUSA_LABEL, CausaHueco, Hueco } from '../../core/models/osa.models';
 const ESTADO_LABEL: Record<EstadoPosicion, string> = {
   vacio: 'Vacío',
   parcial: 'Parcial',
+  sobrante: 'Sobrante',
   surtido_incorrecto: 'Surtido incorrecto',
 };
 
@@ -109,6 +110,15 @@ export class CapturaComponent {
   catalogoCausas = Object.keys(CAUSA_LABEL) as CausaHueco[];
   causaSeleccionada = signal<Record<string, CausaHueco>>({});
   estadoLabel = ESTADO_LABEL;
+
+  /** Lo accionable para quien va a surtir: cuántas piezas mover, no solo que
+   *  "algo falta". Devuelve null si el modelo no logró contar piezas. */
+  faltanteTexto(h: HuecoDetectado): string | null {
+    if (h.diferencia === null || h.diferencia === 0) return null;
+    const n = Math.abs(h.diferencia);
+    const pz = n === 1 ? 'pieza' : 'piezas';
+    return h.diferencia < 0 ? `Faltan ${n} ${pz}` : `Sobran ${n} ${pz}`;
+  }
 
   elegirCausa(id: string, causa: CausaHueco) {
     this.causaSeleccionada.update(m => ({ ...m, [id]: causa }));

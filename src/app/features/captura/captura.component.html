@@ -95,12 +95,20 @@
 
       <div class="hueco-real" *ngFor="let h of resultado.huecos">
         <div class="top">
-          <b>{{ h.producto }}</b>
+          <b>{{ h.producto }}<span class="desc" *ngIf="h.descripcion"> · {{ h.descripcion }}</span></b>
           <span class="estado-chip" [ngClass]="'estado-' + h.estado">
             {{ estadoLabel[h.estado] }}
           </span>
         </div>
-        <p class="pos">SKU {{ h.sku }} · {{ h.posicion }} · {{ h.facings_esperados }} piezas esperadas</p>
+        <p class="pos">SKU {{ h.sku }} · {{ h.posicion }}</p>
+        <p class="conteo">
+          <span class="esperadas">{{ h.facings_esperados }} esperadas</span>
+          <ng-container *ngIf="h.piezas_detectadas !== null">
+            <span class="sep">→</span>
+            <span class="detectadas">{{ h.piezas_detectadas }} en anaquel</span>
+          </ng-container>
+          <span class="delta" *ngIf="faltanteTexto(h) as t" [class.delta-sobra]="(h.diferencia ?? 0) > 0">{{ t }}</span>
+        </p>
         <p class="conf">Confianza del modelo: {{ h.confianza * 100 | number:'1.0-0' }}%</p>
         <div class="causa-select">
           <label [for]="'causa-' + h.posicion_id">Causa probable</label>
